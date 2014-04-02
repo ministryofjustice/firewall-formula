@@ -27,12 +27,9 @@ firewall-enable-{{service}}-{{proto}}-{{port}}:
     - table: filter
     - chain: INPUT
     - jump: ACCEPT
-    - match: state
     - source: {{source_addr}}
-    - connstate: NEW
     - proto: {{proto}}
     - dport: {{dport}}
-    - sport: 1025:65535
     - save: True
 
 {%- endmacro %}
