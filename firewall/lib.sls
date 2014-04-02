@@ -12,39 +12,27 @@
 #              for a messy sls. Consider switching to something like
 #              lokkit -p 22:tcp -p 4505:tcp -p 4506:tcp
 
-{% macro firewall_enable(service, port, proto='tcp', end_port=none, source_addr='any') -%}
+{% macro firewall_enable(service, port, proto='tcp', end_port=none, source_addr='0.0.0.0/0') -%}
 
 # Set the iptables options based on port range or not.
 # ufw allow from 192.168.0.4 to any port 22 proto tcp
 {% if proto=="tcp" and end_port %}
-  {% set grep_pattern = "dpts:" ~ port ~ ":" ~ end_port %}
   {% set dport = port ~ ":" ~ end_port %}
 {% else %}
-  {% set grep_pattern = "dpt:" ~ port %}
   {% set dport = port %}
 {% endif %}
 
-{% if grains['os'] == 'Ubuntu' %}
-
 firewall-enable-{{service}}-{{proto}}-{{port}}:
-  cmd:
-    - run
-    - name: 'ufw allow from {{source_addr}} to any port {{port}} proto {{proto}}'
-
-{% elif grains['os'] == 'CentOS' %}
-#TODO: change policy on ubuntu to be more secured as this is a hack
-
-# Open the specified ports
-firewall-enable-{{service}}-{{proto}}-{{port}}:
-  cmd:
-    - run
-    - unless: 'iptables -L INPUT -n | grep {{grep_pattern}}'
-{% if proto == 'udp' %}
-    - name: 'iptables -I INPUT -p {{proto}} --dport {{dport}} -j ACCEPT && service iptables save'
-{% elif proto == 'tcp' %}
-    - name: 'iptables -I INPUT -m state --state NEW -p {{proto}} --dport {{dport}} -j ACCEPT && service iptables save'
-{% endif %}
-
-{% endif %}
+  iptables.append:
+    - table: filter
+    - chain: INPUT
+    - jump: ACCEPT
+    - match: state
+    - source: {{source_addr}}
+    - connstate: NEW
+    - proto: {{proto}}
+    - dport: {{dport}}
+    - sport: 1025:65535
+    - save: True
 
 {%- endmacro %}
