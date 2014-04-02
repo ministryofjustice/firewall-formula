@@ -30,6 +30,8 @@ firewall-enable-{{service}}-{{proto}}-{{port}}:
     - source: {{source_addr}}
     - proto: {{proto}}
     - dport: {{dport}}
+    - match: comment
+    - comment: {{service}}-{{proto}}-{{port}}
     - save: True
 
 {%- endmacro %}
