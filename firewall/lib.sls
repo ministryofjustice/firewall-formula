@@ -12,46 +12,7 @@
 #              for a messy sls. Consider switching to something like
 #              lokkit -p 22:tcp -p 4505:tcp -p 4506:tcp
 
-{% macro firewall_enable1(service, port, proto='tcp', end_port=none, source_addr='0.0.0.0/0') -%}
 
-# Set the iptables options based on port range or not.
-# ufw allow from 192.168.0.4 to any port 22 proto tcp
-{% if proto=="tcp" and end_port %}
-  {% set dport = port ~ ":" ~ end_port %}
-{% else %}
-  {% set dport = port %}
-{% endif %}
-
-firewall-enable-{{service}}-{{proto}}-{{port}}:
-  iptables.insert:
-    - position: 1
-    - table: filter
-    - chain: INPUT
-    - jump: ACCEPT
-    - source: {{source_addr}}
-    - proto: {{proto}}
-    - dport: {{dport}}
-    - match: comment
-    - comment: {{service}}-{{proto}}-{{port}}
-    - save: True
-
-{%- endmacro %}
-
-
-
-/etc/iptables.d:
-  file.directory:
-    - user: root
-    - group: root
-    - dir_mode: 700
-    - file_mode: 600
-    - clean
-
-/etc/iptables.d/20-portrules:
-  file.managed:
-    - user: root
-    - group: root
-    
 {% macro firewall_enable(service, port, proto='tcp', end_port=none, source_addr='0.0.0.0/0') -%}
 
 # Set the iptables options based on port range or not.
@@ -62,23 +23,16 @@ firewall-enable-{{service}}-{{proto}}-{{port}}:
   {% set dport = port %}
 {% endif %}
 
-firewall-enable-{{service}}-{{proto}}-{{port}}:
-  iptables.insert:
-    - position: 1
-    - table: filter
-    - chain: INPUT
-    - jump: ACCEPT
-    - source: {{source_addr}}
-    - proto: {{proto}}
-    - dport: {{dport}}
-    - match: comment
-    - comment: {{service}}-{{proto}}-{{port}}
-    - save: True
-
 firewall-file-{{service}}-{{proto}}-{{port}}:
-  file.append:
-    - name: /etc/iptables.d/20-portrules
-    - text: "-A INPUT --source {{source_addr}} --proto {{proto}} --dport {{dport}} -j ACCEPT -m comment --comment {{service}}-{{proto}}-{{port}}"
+  file.managed:
+    - name: /etc/iptables.d/20-{{service}}-{{proto}}-{{port}}
+{% if source_addr=="0.0.0.0/0" %}
+    - contents: "-A INPUT -p {{proto}} -m {{proto}} --dport {{dport}} -m comment --comment {{service}}-{{proto}}-{{port}} -j ACCEPT\n"
+{% else %}
+    - contents: "-A INPUT --source {{source_addr}} --p {{proto}} -m {{proto}} --dport {{dport}} -m comment --comment {{service}}-{{proto}}-{{port}} -j ACCEPT\n"
+{% endif %}
+    - require_in:
+      - cmd: firewall-apply
 
 {%- endmacro %}
 
