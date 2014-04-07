@@ -23,7 +23,8 @@
 {% endif %}
 
 firewall-enable-{{service}}-{{proto}}-{{port}}:
-  iptables.append:
+  iptables.insert:
+    - position: 1
     - table: filter
     - chain: INPUT
     - jump: ACCEPT
