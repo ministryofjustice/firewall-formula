@@ -17,16 +17,24 @@ Available states
 .. contents::
     :local:
 
+``firewall``
+----------
+Example usage::
+
+    include:
+      - firewall
+
 ``lib``
 ----------
 
-
 Example usage::
 
-    To configure the firewall rules in the nginx state file, you could do the following:
+    include:
+      - firewall
+
+
+    {# To configure the firewall rules in the nginx state file, you could do the following: #}
 
     {% from 'firewall/lib.sls' import firewall_enable with context %}
     {{ firewall_enable('nginx', nginx.port , 'tcp') }}
 
-Note that this formula require the presence of the hardening formula:  https://github.com/ministryofjustice/hardening-formula
-  
