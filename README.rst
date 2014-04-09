@@ -21,7 +21,6 @@ Available states
 ----------
 
 
-
 Example usage::
 
     To configure the firewall rules in the nginx state file, you could do the following:
@@ -29,4 +28,5 @@ Example usage::
     {% from 'firewall/lib.sls' import firewall_enable with context %}
     {{ firewall_enable('nginx', nginx.port , 'tcp') }}
 
+Note that this formula require the presence of the hardening formula:  https://github.com/ministryofjustice/hardening-formula
   

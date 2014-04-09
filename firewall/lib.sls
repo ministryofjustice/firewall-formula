@@ -32,7 +32,7 @@ firewall-file-{{service}}-{{proto}}-{{port}}:
     - contents: "-A INPUT --source {{source_addr}} --p {{proto}} -m {{proto}} --dport {{dport}} -m comment --comment {{service}}-{{proto}}-{{port}} -j ACCEPT\n"
 {% endif %}
     - require_in:
-      - cmd: firewall-apply  # This command is specified in the hardening formula: https://github.com/ministryofjustice/hardening-formula
+      - cmd: firewall-apply  
 
 {%- endmacro %}
 
