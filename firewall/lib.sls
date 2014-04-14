@@ -24,15 +24,17 @@
 {% endif %}
 
 firewall-file-{{service}}-{{proto}}-{{port}}:
-  file.managed:
-    - name: /etc/iptables.d/20-{{service}}-{{proto}}-{{port}}
+  file.accumulated:
+    - name: iptables-rules
+    - filename: /etc/iptables-rules
 {% if source_addr=="0.0.0.0/0" %}
-    - contents: "-A INPUT -p {{proto}} -m {{proto}} --dport {{dport}} -m comment --comment {{service}}-{{proto}}-{{port}} -j ACCEPT\n"
+    - text: "-A INPUT -p {{proto}} -m {{proto}} --dport {{dport}} -m comment --comment {{service}}-{{proto}}-{{port}} -j ACCEPT\n"
 {% else %}
-    - contents: "-A INPUT --source {{source_addr}} --p {{proto}} -m {{proto}} --dport {{dport}} -m comment --comment {{service}}-{{proto}}-{{port}} -j ACCEPT\n"
+    - text: "-A INPUT --source {{source_addr}} --p {{proto}} -m {{proto}} --dport {{dport}} -m comment --comment {{service}}-{{proto}}-{{port}} -j ACCEPT\n"
 {% endif %}
     - require_in:
-      - cmd: firewall-apply  
+      - cmd: firewall-apply
+      - file: /etc/iptables-rules
 
 {%- endmacro %}
 
