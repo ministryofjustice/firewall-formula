@@ -1,0 +1,13 @@
+*filter
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:logging - [0:0]
+-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+{% for rule in accumulator['iptables-rules'] | sort -%}
+{{ rule }}
+{%- endfor -%}
+-A INPUT -j logging
+-A logging -m limit --limit 2/min -j LOG --log-prefix "IPTables-Dropped: "
+-A logging -j ACCEPT
+COMMIT
