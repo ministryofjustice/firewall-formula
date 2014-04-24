@@ -1,4 +1,7 @@
 
+iptables:
+  pkg.installed
+
 /etc/iptables-rules:
   file.managed:
     - source: salt://firewall/templates/iptables-rules
