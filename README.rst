@@ -24,6 +24,13 @@ Example usage::
     include:
       - firewall
 
+
+**Pillar variables used:**
+
+firewall:default_policy:
+  What to do with packets that are not otherwised handled by another rule.
+  ``ACCEPT`` (the default) or ``DROP``
+
 ``lib``
 ----------
 

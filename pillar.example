@@ -1,1 +1,2 @@
-None defined
+firewall:
+  default_policy: DROP

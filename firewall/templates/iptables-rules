@@ -1,5 +1,5 @@
 *filter
-:INPUT ACCEPT [0:0]
+:INPUT {{ salt['pillar.get']('firewall:default_poilcy', 'ACCEPT') }} [0:0]
 :FORWARD ACCEPT [0:0]
 :OUTPUT ACCEPT [0:0]
 :logging - [0:0]
@@ -9,5 +9,4 @@
 {%- endfor -%}
 -A INPUT -j logging
 -A logging -m limit --limit 2/min -j LOG --log-prefix "IPTables-Dropped: "
--A logging -j ACCEPT
 COMMIT
