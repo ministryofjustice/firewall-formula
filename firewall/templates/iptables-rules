@@ -4,6 +4,7 @@
 :OUTPUT ACCEPT [0:0]
 :logging - [0:0]
 -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+-A INPUT -p icmp --icmp-type timestamp-request -j DROP
 {% for rule in accumulator['iptables-rules'] | sort -%}
 {{ rule }}
 {%- endfor -%}
