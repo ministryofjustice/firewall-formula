@@ -1,4 +1,4 @@
-## Master
+## Version 1.1.0
 
 * Added pillar value firewall.enabled (default=True) to disable firewall management for desired envs
 
