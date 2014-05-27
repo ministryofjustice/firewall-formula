@@ -2,7 +2,7 @@
 iptables:
   pkg.installed
 
-% from "firewall/map.jinja" import firewall with context %}
+{% from "firewall/map.jinja" import firewall with context %}
 
 {%- if firewall.enabled %}
 
