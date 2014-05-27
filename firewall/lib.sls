@@ -12,9 +12,11 @@
 #              for a messy sls. Consider switching to something like
 #              lokkit -p 22:tcp -p 4505:tcp -p 4506:tcp
 
+{% from "firewall/map.jinja" import firewall with context %}
 
 {% macro firewall_enable(service, port, proto='tcp', end_port=none, source_addr='0.0.0.0/0') -%}
 
+{%- if firewall.enabled %}
 # Set the iptables options based on port range or not.
 # ufw allow from 192.168.0.4 to any port 22 proto tcp
 {% if proto=="tcp" and end_port %}
@@ -36,5 +38,6 @@ firewall-file-{{service}}-{{proto}}-{{port}}:
       - cmd: firewall-apply
       - file: /etc/iptables-rules
 
+{%- endif %}
 {%- endmacro %}
 
