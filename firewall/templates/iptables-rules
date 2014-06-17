@@ -1,5 +1,5 @@
 *filter
-:INPUT {{ salt['pillar.get']('firewall:default_poilcy', 'ACCEPT') }} [0:0]
+:INPUT {{ salt['pillar.get']('firewall:default_policy', 'ACCEPT') }} [0:0]
 :FORWARD ACCEPT [0:0]
 :OUTPUT ACCEPT [0:0]
 :logging - [0:0]
