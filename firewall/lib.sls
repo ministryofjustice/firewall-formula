@@ -7,7 +7,7 @@
 #              end_port is not.
 # end_port:    The end_port of a port range to open.
 #
-# Limitations: UDP range will opnly open the first port; port-range is a
+# Limitations: UDP range will only open the first port; port-range is a
 #              tcp-match option of iptables and a different approach would make
 #              for a messy sls. Consider switching to something like
 #              lokkit -p 22:tcp -p 4505:tcp -p 4506:tcp
