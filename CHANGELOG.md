@@ -1,3 +1,7 @@
+## Version 1.1.1
+
+* Fix typos in docs (#5 and #6)
+
 ## Version 1.1.0
 
 * Added pillar value firewall.enabled (default=True) to disable firewall management for desired envs
