@@ -5,6 +5,7 @@
 :logging - [0:0]
 -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 -A INPUT -p icmp -m icmp --icmp-type 13 -j DROP
+-A INPUT --source 127.0.0.0/8 -j ACCEPT
 {% for rule in accumulator['iptables-rules'] | sort -%}
 {{ rule }}
 {%- endfor -%}
