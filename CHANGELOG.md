@@ -1,3 +1,7 @@
+## Version 1.1.2
+
+* Always allow 127.0.0.0/8
+
 ## Version 1.1.1
 
 * Fix typos in docs (#5 and #6)
