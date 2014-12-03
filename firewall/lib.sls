@@ -41,3 +41,16 @@ firewall-file-{{service}}-{{proto}}-{{port}}:
 {%- endif %}
 {%- endmacro %}
 
+{% macro firewall_nat(name, entry) -%}
+
+firewall-nat-{{name}}:
+  file.accumulated:
+    - name: iptables-nat
+    - filename: /etc/iptables-rules
+    - text: "{{entry}}\n"
+    - require_in:
+      - cmd: firewall-apply
+      - file: /etc/iptables-rules
+
+{%- endmacro %}
+

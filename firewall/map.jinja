@@ -1,6 +1,7 @@
 {% set firewall = salt['grains.filter_by']({
     'Debian': {
-        'enabled': True
+        'enabled': True,
+        'default_policy': 'ACCEPT'
     },
     'default': 'Debian',
 }, merge=salt['pillar.get']('firewall',{})) %}

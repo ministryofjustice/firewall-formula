@@ -1,14 +1,26 @@
+{% from "firewall/map.jinja" import firewall with context %}
+
+*nat
+:PREROUTING ACCEPT [0:0]
+:INPUT ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+{% for rule in accumulator['iptables-nat'] | sort -%}
+{{ rule }}
+{%- endfor -%}
+COMMIT
+
 *filter
-:INPUT {{ salt['pillar.get']('firewall:default_policy', 'ACCEPT') }} [0:0]
+:INPUT {{ firewall.default_policy }} [0:0]
 :FORWARD ACCEPT [0:0]
 :OUTPUT ACCEPT [0:0]
 :logging - [0:0]
 -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
--A INPUT -p icmp -m icmp --icmp-type 13 -j DROP
 -A INPUT --source 127.0.0.0/8 -j ACCEPT
 {% for rule in accumulator['iptables-rules'] | sort -%}
 {{ rule }}
 {%- endfor -%}
+-A INPUT -p icmp -m icmp --icmp-type 13 -j DROP
 -A INPUT -j logging
--A logging -m limit --limit 2/min -j LOG --log-prefix "IPTables-Dropped: "
+-A logging -m limit --limit 1/second -j LOG --log-prefix "IPTables-Dropped: "
 COMMIT

@@ -1,3 +1,10 @@
+## Version 1.1.
+
+* Fix order of ICMP type 13 filtering #10
+* Fix defaults location #11
+* Increase firewall logging as 2/min was not giving too limited visibility
+* Add ability to manage nat tables
+
 ## Version 1.1.2
 
 * Always allow 127.0.0.0/8

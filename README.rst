@@ -27,9 +27,13 @@ Example usage::
 
 **Pillar variables used:**
 
-firewall:default_policy:
+firewall:default_policy: ``ACCEPT`` - default
   What to do with packets that are not otherwised handled by another rule.
-  ``ACCEPT`` (the default) or ``DROP``
+  ``ACCEPT`` or ``DROP``
+
+firewall:enabled: ``True`` - default
+  To globally enable/disable firewall rules
+
 
 ``lib``
 ----------
@@ -45,3 +49,8 @@ Example usage::
     {% from 'firewall/lib.sls' import firewall_enable with context %}
     {{ firewall_enable('nginx', nginx.port , 'tcp') }}
 
+
+    {# to configure PREROUTING table #}
+
+    {% from 'firewall/lib.sls' import firewall_nat with context %}
+    {{ firewall_nat('port-hack'+source, '-A PREROUTING -s ' + source + ' -p tcp -m tcp --dport ' ~ https_port ~ ' -j DNAT --to-destination :' ~ https_port_hack) }}
