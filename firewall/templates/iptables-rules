@@ -5,7 +5,7 @@
 :INPUT ACCEPT [0:0]
 :OUTPUT ACCEPT [0:0]
 :POSTROUTING ACCEPT [0:0]
-{% for rule in accumulator['iptables-nat'] | sort -%}
+{% for rule in accumulator.get('iptables-nat', []) | sort -%}
 {{ rule }}
 {%- endfor -%}
 COMMIT
@@ -17,7 +17,7 @@ COMMIT
 :logging - [0:0]
 -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 -A INPUT --source 127.0.0.0/8 -j ACCEPT
-{% for rule in accumulator['iptables-rules'] | sort -%}
+{% for rule in accumulator.get('iptables-rules', []) | sort -%}
 {{ rule }}
 {%- endfor -%}
 -A INPUT -p icmp -m icmp --icmp-type 13 -j DROP
