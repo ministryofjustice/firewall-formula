@@ -26,17 +26,16 @@
 {% endif %}
 
 firewall-file-{{service}}-{{proto}}-{{port}}:
-  file.accumulated:
-    - name: iptables-rules
-    - filename: /etc/iptables-rules
+  cmd.run:
 {% if source_addr=="0.0.0.0/0" %}
-    - text: "-A INPUT -p {{proto}} -m {{proto}} --dport {{dport}} -m comment --comment {{service}}-{{proto}}-{{port}} -j ACCEPT\n"
+    {% set iptables_cmd =  "-A INPUT -p " ~ proto ~ " -m " ~  proto  ~ " --dport " ~  dport ~ " -m comment --comment " ~ service ~ "-" ~ proto ~ "-" ~ port ~ " -j ACCEPT" %}
 {% else %}
-    - text: "-A INPUT --source {{source_addr}} --p {{proto}} -m {{proto}} --dport {{dport}} -m comment --comment {{service}}-{{proto}}-{{port}} -j ACCEPT\n"
+    {% set iptables_cmd = "-A INPUT --source " ~  source_addr ~ " --p " ~ proto ~ " -m " ~ proto  ~ " --dport " ~ dport ~ " -m comment --comment " ~ service ~ "-" ~ proto ~ "-" ~ port ~ " -j ACCEPT" %}
 {% endif %}
-    - require_in:
-      - cmd: firewall-apply
-      - file: /etc/iptables-rules
+    - name: 'iptables {{iptables_cmd}}'
+    - unless: "iptables-save | grep -q -- '{{iptables_cmd}}'"
+    - watch_in:
+      - cmd: firewall-save
 
 {%- endif %}
 {%- endmacro %}
