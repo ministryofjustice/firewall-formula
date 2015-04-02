@@ -1,3 +1,8 @@
+## Version 2.0.0
+
+* Play well with other apps modifying iptables. 
+* *WARNING*: Rules are now applied one by one at the time they're defined, and not in one go.
+
 ## Version 1.1.2
 
 * Always allow 127.0.0.0/8
